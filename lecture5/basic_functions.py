@@ -81,7 +81,8 @@ def get_sleep_hr_data(hr_data_paths, sleep_data_paths):
     
     start_datetime = datetime.datetime.strptime(os.path.basename(sleep_data_paths[0]).split('.txt')[0], '%Y-%m-%d')
     end_datetime = datetime.datetime.strptime(os.path.basename(sleep_data_paths[-1]).split('.txt')[0], '%Y-%m-%d') + datetime.timedelta(days=1)
-    data_collection['sleep'] = np.array([0] * 1440 * (end_datetime - start_datetime).days)
+    # data_collection['sleep'] = np.array([0] * 1440 * (end_datetime - start_datetime).days)
+    data_collection['sleep'] = np.array([0] * len(data_collection['value']))
 
     sleep_start_end_datetime = dict()
     for sleep_data_path in sleep_data_paths:
@@ -93,6 +94,8 @@ def get_sleep_hr_data(hr_data_paths, sleep_data_paths):
         tmp_s = tmp_s.replace('true', '"True"')
         tmp_s = tmp_s.replace('false', '"False"')
         data_dict = json.loads(tmp_s)
+        if data_dict['sleep'] == []:
+            continue
         start_time = data_dict['sleep'][0]['startTime'].split('.')[0]
         end_time = data_dict['sleep'][0]['endTime'].split('.')[0]
         start_datetime = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
