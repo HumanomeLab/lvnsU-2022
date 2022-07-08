@@ -123,7 +123,10 @@ def get_RHR(hr_data_paths):
         with open(hr_data_path) as file:
             hr_data_text = file.read()
         hr_data_dict = literal_eval(hr_data_text)
-        rhr_value = hr_data_dict['activities-heart'][0]['value']['restingHeartRate']
+        if 'restingHeartRate' not in hr_data_dict['activities-heart'][0]['value']:
+            rhr_value = np.median(rhr_list) # 苦肉の策（良い回答ではないです、、、　直ぐに良い回答は難しい）
+        else:
+            rhr_value = hr_data_dict['activities-heart'][0]['value']['restingHeartRate']
         rhr_list.append(rhr_value)
 
     #Create RHR data frame and output the data frame as csv
